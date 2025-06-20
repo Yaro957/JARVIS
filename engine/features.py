@@ -10,8 +10,8 @@ import eel
 import pvporcupine
 import pyaudio
 import pyautogui
-# from engine.command import speak
-# from engine.config import ASSISTANT_NAME
+from engine.command import speak
+from engine.config import ASSISTANT_NAME
 import sqlite3
 import webbrowser
 import pvporcupine
@@ -118,6 +118,7 @@ def hotword():
             paud.terminate()
 
 def findContact(query):
+    from engine.helper import remove_words
     mail=0
     
     if "mail"in query:

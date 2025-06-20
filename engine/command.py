@@ -1,11 +1,7 @@
-import time
 import pyttsx3
 import speech_recognition as sr
 import eel
-from engine.features import (
-    openCommand, PlayYoutube, findContact, whatsApp,
-    sendemail, phonecall, sms
-)
+import time
 from engine.helper import detectCapabilitiesIntent
 
 
@@ -60,6 +56,7 @@ def allCommands(message=1):
         query = query.lower()  # ✅ Normalize for consistency
 
         if "open" in query:
+            from engine.features import openCommand
             openCommand(query)
 
         elif detectCapabilitiesIntent(query):  # ✅ Handle capability intent first
@@ -69,9 +66,11 @@ def allCommands(message=1):
             speak("hello sir, how may I help you")
 
         elif "on youtube" in query:
+            from engine.features import PlayYoutube
             PlayYoutube(query)
 
         elif "send message" in query or "phone call" in query or "video call" in query:
+            from engine.features import findContact, whatsApp
             flag = ""
             contact_no, name = findContact(query)
 
@@ -92,6 +91,7 @@ def allCommands(message=1):
             whatsApp(contact_no, query, flag, name)
 
         elif "mail" in query:
+            from engine.features import sendemail,findContact
             speak("what's the subject")
             subject = takecommand()
             speak("tell me the body of email")
@@ -105,12 +105,14 @@ def allCommands(message=1):
             sendemail(name, email, subject, body)
 
         elif "call" in query:  # ✅ Placed AFTER "phone call"
+            from engine.features import phonecall,findContact
             mobile_no, name = findContact(query)
             if mobile_no == 0:
                 return
             phonecall(mobile_no, name)
 
         elif "sms" in query:
+            from engine.features import sms,findContact
             mobile_no, name = findContact(query)
             if mobile_no == 0:
                 return
