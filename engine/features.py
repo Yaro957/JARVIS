@@ -10,12 +10,13 @@ import eel
 import pvporcupine
 import pyaudio
 import pyautogui
-from engine.command import speak
-from engine.config import ASSISTANT_NAME
+# from engine.command import speak
+# from engine.config import ASSISTANT_NAME
 import sqlite3
 import webbrowser
 import pvporcupine
-from engine.helper import *
+import urllib.parse
+# from engine.helper import *
 
 conn=sqlite3.connect("jarvis.db")
 cursor=conn.cursor()
@@ -30,10 +31,7 @@ def playAssistantSound(value):
         playsound(voice)
     else:
         playsound(start)
-    
-    
 
-    
 def openCommand(query):
     query = query.replace(ASSISTANT_NAME, "")
     query = query.replace("open", "")
@@ -106,10 +104,10 @@ def hotword():
 
                 # pressing shorcut key win+j
                 import pyautogui as autogui
-                keyboard.press("windows")
-                keyboard.press_and_release("j")
-                time.sleep(0.2)
-                keyboard.release("windows")
+                autogui.keyDown("win")
+                autogui.press("j")
+                time.sleep(2)
+                autogui.keyUp("win")
                 
     except:
         if porcupine is not None:
@@ -118,24 +116,32 @@ def hotword():
             audio_stream.close()
         if paud is not None:
             paud.terminate()
-            
-# Whatsapp Message Sending
+
 def findContact(query):
+    mail=0
     
-    
-    words_to_remove = [ASSISTANT_NAME, 'make', 'a', 'to', 'phone', 'call', 'send', 'message', 'whatsapp', 'video']
+    if "mail"in query:
+        mail=1
+    words_to_remove = [ASSISTANT_NAME, 'mail','make', 'a', 'to', 'phone', 'call', 'send', 'message', 'whatsapp', 'video','sms']
     query = remove_words(query, words_to_remove)
+    
 
     try:
         query = query.strip().lower()
-        cursor.execute("SELECT mobile_no FROM contacts WHERE LOWER(name) LIKE ? OR LOWER(name) LIKE ?", ('%' + query + '%', query + '%'))
-        results = cursor.fetchall()
-        print(results[0][0])
-        mobile_number_str = str(results[0][0])
-        if not mobile_number_str.startswith('+91'):
+        if mail!="1":
+            cursor.execute("SELECT mobile_no FROM contacts WHERE LOWER(name) LIKE ? OR LOWER(name) LIKE ?", ('%' + query + '%', query + '%'))
+            results = cursor.fetchall()
+            print(results[0][0])
+            mobile_number_str = str(results[0][0])
             mobile_number_str = '+91' + mobile_number_str
-
-        return mobile_number_str, query
+            return mobile_number_str, query
+        else:
+            cursor.execute("SELECT email FROM contacts WHERE LOWER(name) LIKE ? OR LOWER(name) LIKE ?", ('%' + query + '%', query + '%'))
+            results = cursor.fetchall()
+            print(results[0][0])
+            email= str(results[0][0])
+            return email, query
+    
     except Exception as e:
         print(e)
         speak('not exist in contacts')
@@ -189,3 +195,41 @@ def whatsApp(mobile_no, message, flag, name):
     except Exception as e:
         print(f"Error in whatsApp function: {e}")
         speak("Sorry, I couldn't complete the WhatsApp action.")
+def phonecall(mobile_no,name):
+    mobile_no=mobile_no.replace(" ","")
+    speak("calling"+name+"from phone")
+    os.system('adb shell am start -a android.intent.action.CALL -d tel:'+mobile_no)
+    
+
+def sms(mobile_no, name, message):
+   # URL encode the message properly (handles all special characters)
+   encoded_message = urllib.parse.quote(message)
+   
+   speak(f"Sending message to {name} by phone")
+
+   # Construct ADB command
+   adb_command = f'adb shell am start -a android.intent.action.VIEW -d "sms:{mobile_no}?body={encoded_message}"'
+   
+   # Execute command and check for errors
+   result = os.system(adb_command)
+   if result != 0:
+       print(f"Error executing ADB command: {result}")
+       return False
+   
+   time.sleep(2)
+   
+   # Tap send button
+   os.system("adb shell input tap 981 2261")
+   
+   return True
+def sendemail(name,email,subject,body):
+    subject=urllib.parse.quote(subject)
+    body.replace(" ","\ ")
+    os.system(f"adb shell am start -a android.intent.action.VIEW -d'mailto:{email}?subject={subject}'")
+    time.sleep(1)
+    os.system("adb shell input tap 148 828")
+    os.system(f"adb shell input text '{body}'")
+    time.sleep(1) 
+    # speak("mail sent to"+name)
+    print("sending mail to "+name)  
+    os.system("adb shell input tap 884 181") 

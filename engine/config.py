@@ -1,1 +1,3 @@
 ASSISTANT_NAME="JARVIS"
+EMAIL="omjumde204@gmail.com"
+PASSWORD="-9?(MxNe_PEgNAS"

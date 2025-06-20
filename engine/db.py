@@ -86,14 +86,14 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS contacts (id integer primary key, n
 
 # Specify the column indices you want to import (0-based index)
 # Example: Importing the 1st and 3rd columns
-desired_columns_indices = [0, 1]
+desired_columns_indices = [0,1,2]
 
 # Read data from CSV and insert into SQLite table for the desired columns
 with open('contacts.csv', 'r', encoding='utf-8') as csvfile:
     csvreader = csv.reader(csvfile)
     for row in csvreader:
         selected_data = [row[i] for i in desired_columns_indices]
-        cursor.execute(''' INSERT INTO contacts (id, 'name', 'mobile_no') VALUES (null, ?, ?);''', tuple(selected_data))
+        cursor.execute(''' INSERT INTO contacts (id, 'name', 'mobile_no','email') VALUES (null, ?, ?,?);''', tuple(selected_data))
 
 # Commit changes and close connection
 # cursor.execute("DELETE FROM  contacts")

@@ -1,23 +1,14 @@
-anjana ghule,8087207848
-chitra gaikwad,9890758907
-dhanashri nikhate,7218109817
-gattu,9420963840
-home,8485870350
-kadambari it,7276287108
-mohit mane,9860950978
-pallu,8208841552
-papa,9850785612
-pooja daydar,8767167857
-tushar gakhare,9765866159
-lucifer,7666200776
-piyu,9552505914
-
-
-
-def playAssistantSound(value):
-    start= "www\\assets\\audio\\init.mp3"
-    voice="www\\assets\\audio\\voice.mp3"
-    if value=='1':
-        playsound(voice)
-    else:
-        playsound(start)
+vedant gavale,9860221940,
+vishal,9322330466,
+saurabh,8999450069,
+gattu,9420963840,
+home,8485870350,jumdekiran167@gmail.com
+kadambari it,7276287108,
+mohit mane,9860950978,mohitmane226@gmail.com
+pallu,8208841552,
+papa,9850785612,
+bacchi,8767167857,poojadaydar@gmail.com
+tushar gakhare,9765866159,
+lucifer,7666200776,jumdeom302@gmail.com
+piyu,9552505914,
+pranav,9284359114,pranshuff6903@gmail.com
