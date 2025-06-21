@@ -2,7 +2,7 @@ import os
 import eel
 
 from engine.features import *
-from engine.command import *
+# from engine.command import speak ,takecommand
 
 def start():
     

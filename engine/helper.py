@@ -1,4 +1,6 @@
 import re
+
+
 def extract_yt_term(command):
     # Define a regular expression pattern to capture the song name
     pattern = r'play\s+(.*?)\s+on\s+youtube'
@@ -37,17 +39,6 @@ def detectCapabilitiesIntent(query):
     query = query.lower()
 
     if any(phrase in query for phrase in capability_phrases):
-        speak(
-speak(
-    "Hello, I am Jarvis — your personal AI assistant, inspired by the fictional AI from Iron Man. "
-    "I can perform a variety of tasks to assist you. "
-    "Here's what I can do: "
-    "Play sounds, open apps and websites, play YouTube videos, detect hotwords, manage your contacts, "
-    "send WhatsApp messages or make calls, initiate phone calls, send SMS, and even draft and send emails. "
-    "I'm always learning and evolving to serve you better, just like my namesake."
-)
-
-        )
+        speak("Hello, I am Jarvis — your personal AI assistant inspired by the fictional AI from Iron Man. I can play sounds, open apps and websites, play YouTube videos, detect hotwords, manage your contacts, send WhatsApp messages or make calls, initiate phone calls, send SMS, and even draft and send emails — all while constantly learning and evolving to serve you better, just like my namesake.")
         return True  # ✅ Tell caller: I handled it!
     return False
-

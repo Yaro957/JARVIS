@@ -4,3 +4,4 @@ jarvis.db
 /engine/__pycache__
 /engine/cookies.json
 /engine/config.py
+/piper

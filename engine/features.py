@@ -74,6 +74,7 @@ def openCommand(query):
 
     
 def PlayYoutube(query):
+    from engine.helper import extract_yt_term
     search_term = extract_yt_term(query)
     speak("Playing "+search_term+" on YouTube")
     kit.playonyt(search_term)
