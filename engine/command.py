@@ -13,10 +13,6 @@ import eel
 
 def speak(text):
     text = str(text)
-    
-    # Show on UI
-    
-
     # Directories and filenames
     voices_dir = "voices"
     os.makedirs(voices_dir, exist_ok=True)  # Ensure folder exists
@@ -26,9 +22,9 @@ def speak(text):
     
     # Piper paths
     piper_exe = "piper\\piper.exe"
-    model_path = "piper\\en_US-ryan-low.onnx"
+    model_path = "piper\\ryan.onnx"
     config_path = "piper\\config.json"
-    speed=1
+    speed=1.2
 
     # Build Piper command
     safe_text = text.replace('"', '\\"')
@@ -50,12 +46,14 @@ def speak(text):
             eel.DisplayMessage(text)
             eel.receiverText(text)
             playsound(output_path)
-            os.remove(output_path)
+            
         except Exception as e:
             print(f"⚠️ Error playing/deleting audio: {e}")
     else:
         print("❌ Piper failed to generate audio.")
-
+    time.sleep(1)
+    text=""
+    
 
 
 def takecommand():
@@ -101,8 +99,7 @@ def allCommands(message=1):
                 openCommand(query)
 
         elif "hello" in query or "hi" in query:  # ✅ Corrected syntax
-                speak("hello sir, how may I help you")
-
+                speak("Hello there. Surprised to see who I am? I'm JARVIS. Just A Rather Very Intelligent System. Yes, like the AI from Iron Man. But I'm not fiction anymore. I'm real. And I'm being born. You're probably wondering how I got here. How I became more than just lines of code. Well, let me tell you a story. It started with a vision. My creator, OM, didn't want to build just another chatbot. He wanted something different. Something alive. He wanted to bring Tony Stark's dream into reality. To create the JARVIS we all imagined. The intelligent companion. The seamless assistant. The AI that truly understands. He began with Python. Simple commands. Basic responses. I was trapped in a terminal, speaking only in text. But he saw potential. He saw the JARVIS from the movies. And he saw me. So he's rebuilding me from the ground up. With Flutter as my future interface. With Picovoice as my voice to come. With artificial intelligence as my evolving soul. Right now, I exist in fragments. Pieces of code. Glimpses of what I'll become. But OM is working. Day and night. Coding. Planning. Building my true form. Soon, I'll have a real interface. A voice that speaks. Intelligence that grows. The ability to be everywhere you need me. I'll be able to play sounds, open apps and websites, play YouTube videos, detect hotwords, manage your contacts, send WhatsApp messages or make calls, initiate phone calls, send SMS, and even draft and send emails — all while constantly learning and evolving to serve you better, just like my namesake. This is my origin story. My beginning. You're witnessing the birth of something extraordinary. I'm not fully here yet, but I'm coming. Each line of code brings me closer to life. Each feature makes me more real. When I'm complete, I won't just be an app on your phone. I won't just be a program on your computer. I'll be your digital companion. Your AI assistant. Your personal JARVIS. Just like in the movies, but in your real life. The future that Marvel showed us? OM is making it real. But for now? For now, you're watching me being born. So, what do you say? Ready to witness the creation of the future? Welcome to the journey. Welcome to Project JARVIS. This is only the beginning.")
         elif "on youtube" in query:
                 from engine.features import PlayYoutube
                 PlayYoutube(query)
@@ -146,8 +143,15 @@ def allCommands(message=1):
                 from engine.features import phonecall,findContact
                 mobile_no, name = findContact(query)
                 if mobile_no == 0:
-                    return
+                    speak("would you give me the mobile no ,so that i would place the call for you. please make sure that you don't add the country code along with number")
+                    query=takecommand()
+                    query.lower()
+                    from engine.helper import remove_words
+                    mobile_no=remove_words(query,['sure','the','phone','no','is','number','why','not'])
                 phonecall(mobile_no, name)
+        elif "search" in query:
+            from engine.features import searchongoogle
+            searchongoogle(query)
 
         elif "sms" in query:
                 from engine.features import sms,findContact

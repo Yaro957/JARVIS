@@ -14,6 +14,7 @@ def listenHotword():
         print("Process 2 is running.")
         from engine.features import hotword
         hotword()
+        print("hotword started")
 
 
     # Start both processes

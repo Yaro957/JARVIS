@@ -13,6 +13,12 @@ $(document).ready(function () {
     function ShowHood() {
         $("#Oval").attr("hidden", false);
         $("#SiriWave").attr("hidden", true);
+        ()=>{
+            document.getElementsByClassName('.siri-message').innerText("hello I'm Jarvis");
+        }
+
+        
+
     }
 
     // ✅ Show sender's chat bubble

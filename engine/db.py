@@ -92,6 +92,10 @@ desired_columns_indices = [0,1,2]
 with open('contacts.csv', 'r', encoding='utf-8') as csvfile:
     csvreader = csv.reader(csvfile)
     for row in csvreader:
+        if len(row) < 2:
+            continue  # skip empty or invalid rows
+        elif len(row) == 2:
+            row.append(None)  # add a placeholder for missing email 
         selected_data = [row[i] for i in desired_columns_indices]
         cursor.execute(''' INSERT INTO contacts (id, 'name', 'mobile_no','email') VALUES (null, ?, ?,?);''', tuple(selected_data))
 

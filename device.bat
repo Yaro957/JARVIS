@@ -1,23 +1,32 @@
 @echo off
-echo [1/5] Disconnecting old ADB connections...
+echo [1/6] Disconnecting old ADB connections...
 adb disconnect
 
-echo [2/5] Switching device to TCP/IP mode on port 5555...
+echo [2/6] Switching device to TCP/IP mode on port 5555...
 adb tcpip 5555
 
-echo [3/5] Waiting for device to initialize...
+echo [3/6] Waiting for device to initialize...
 timeout /t 3 >nul
 
-echo [4/5] Getting device IP address from wlan0...
+echo [4/6] Getting device IP address from wlan0...
 FOR /F "tokens=2" %%G IN ('adb shell ip addr show wlan0 ^| find "inet "') DO set ipfull=%%G
-FOR /F "tokens=1 delims=/" %%G IN ("%ipfull%") DO set ip=%%G
+FOR /F "tokens=1 delims=/" %%G IN ("%ipfull%") DO set phone_ip=%%G
 
-if defined ip (
-    echo [5/5] Connecting to device at %ip%...
-    adb connect %ip%
+:: Get PC IP (assuming Wi-Fi connection)
+FOR /F "tokens=14" %%a IN ('ipconfig ^| findstr /i "IPv4"') DO set pc_ip=%%a
+
+:: Extract subnet (first 3 octets) from both
+FOR /F "tokens=1-3 delims=." %%a IN ("%phone_ip%") DO set phone_subnet=%%a.%%b.%%c
+FOR /F "tokens=1-3 delims=." %%a IN ("%pc_ip%") DO set pc_subnet=%%a.%%b.%%c
+
+:: Check if same subnet
+if "%phone_subnet%"=="%pc_subnet%" (
+    echo [5/6] Phone and PC are on the same network (%phone_subnet%.x)
+    echo [6/6] Connecting to device at %phone_ip%...
+    adb connect %phone_ip%
 ) else (
-    echo [!] Automatic IP detection failed.
-    echo [!] Trying manual IP fallback...
+    echo [!] Phone and PC are NOT on the same network.
+    echo [!] Attempting manual fallback...
 
     :: === Edit this manually if needed ===
     set DEVICE_IP=192.168.1.5
@@ -25,5 +34,5 @@ if defined ip (
     adb connect %DEVICE_IP%:%ADB_PORT%
 )
 
-echo  Done.
-
+echo Done.
+pause

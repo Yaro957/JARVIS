@@ -11,12 +11,14 @@ import pvporcupine
 import pyaudio
 import pyautogui
 from engine.command import speak
-from engine.config import ASSISTANT_NAME
+from engine.config import ASSISTANT_NAME , ACCESS_KEY
 import sqlite3
 import webbrowser
 import pvporcupine
 import urllib.parse
+import webbrowser
 # from engine.helper import *
+
 
 conn=sqlite3.connect("jarvis.db")
 cursor=conn.cursor()
@@ -72,7 +74,19 @@ def openCommand(query):
     else:
         speak('found nothing to open in your speech, sir')
 
+def searchongoogle(query):
+    from engine.helper import remove_words
+    words_to_remove = [ASSISTANT_NAME,'make', 'a', 'an', 'google', 'search', 'for','show', 'me',
+    'can', 'you', 'please' ]
+    newquery = remove_words(query, words_to_remove)
+    print(newquery)
+    newquery1='+'.join(newquery.split())
+    link='https://www.google.com/search?q='
+    url=link+newquery1
+    webbrowser.open_new(url)
+    speak("searching"+newquery+"on google")
     
+
 def PlayYoutube(query):
     from engine.helper import extract_yt_term
     search_term = extract_yt_term(query)
@@ -87,7 +101,9 @@ def hotword():
     try:
        
         # pre trained keywords    
-        porcupine=pvporcupine.create(keywords=["jarvis","alexa"]) 
+        porcupine=pvporcupine.create(
+             access_key=ACCESS_KEY,
+            keywords=["jarvis","alexa"]) 
         paud=pyaudio.PyAudio()
         audio_stream=paud.open(rate=porcupine.sample_rate,channels=1,format=pyaudio.paInt16,input=True,frames_per_buffer=porcupine.frame_length)
         
@@ -110,7 +126,9 @@ def hotword():
                 time.sleep(2)
                 autogui.keyUp("win")
                 
-    except:
+    except Exception as e:
+        print(e)
+        
         if porcupine is not None:
             porcupine.delete()
         if audio_stream is not None:
@@ -146,7 +164,7 @@ def findContact(query):
     
     except Exception as e:
         print(e)
-        speak('not exist in contacts')
+        speak('the details are not available in contacts')
         return 0, 0
 
 
@@ -197,10 +215,19 @@ def whatsApp(mobile_no, message, flag, name):
     except Exception as e:
         print(f"Error in whatsApp function: {e}")
         speak("Sorry, I couldn't complete the WhatsApp action.")
-def phonecall(mobile_no,name):
-    mobile_no=mobile_no.replace(" ","")
-    speak("calling"+name+"from phone")
-    os.system('adb shell am start -a android.intent.action.CALL -d tel:'+mobile_no)
+def phonecall(mobile_no, name):
+    mobile_no = mobile_no.replace(" ", "").replace("-", "")
+    
+    # Add country code if missing
+    if mobile_no.startswith("+91"):
+        formatted_no = mobile_no
+    elif mobile_no.startswith("91"):
+        formatted_no = "+" + mobile_no
+    else:
+        formatted_no = "+91" + mobile_no
+
+    speak(f"Calling {name} from phone")
+    os.system(f'adb shell am start -a android.intent.action.CALL -d tel:{formatted_no}')
     
 
 def sms(mobile_no, name, message):
@@ -226,8 +253,8 @@ def sms(mobile_no, name, message):
    return True
 def sendemail(name,email,subject,body):
     subject=urllib.parse.quote(subject)
-    body.replace(" ","\ ")
-    os.system(f"adb shell am start -a android.intent.action.VIEW -d'mailto:{email}?subject={subject}'")
+    body.replace(" ", "\\ ")
+    os.system(f"adb shell am start -a android.intent.action.VIEW -d mailto:{email}?subject={subject}")
     time.sleep(1)
     os.system("adb shell input tap 148 828")
     os.system(f"adb shell input text '{body}'")

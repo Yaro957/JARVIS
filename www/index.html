@@ -26,35 +26,24 @@
 </head>
 
 <body>
-<script>
-    window.onload = function () {
-        eel.playAssistantSound("0");  // Calls Python function when page loads
-    }
-</script>
+    <script>
+        window.onload = function () {
+            eel.playAssistantSound("0");  // Calls Python function when page loads
+        }
+    </script>
 
     <div class="container">
 
 
 
-        <section id="Oval" class="mb-4" >
+        <section id="Oval" class="mb-4">
 
             <div class="row">
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
                     <div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
 
-                        <canvas id="canvasOne" width="700" height="420" style="position: absolute;"></canvas>
-
-                        <div id="JarvisHood">
-
-                            <div class="square">
-                                <span class="circle"></span>
-                                <span class="circle"></span>
-                                <span class="circle"></span>
-                            </div>
-
-                        </div>
-
+                        <img style="width: auto ; height:70%; width:max-content;" src="assets/video/jarvis.gif">
                     </div>
                     <h5 class="text-light text text-center">Ask me anything</h5>
 
@@ -66,7 +55,9 @@
                                     placeholder="type here ... ">
                                 <button id="sendBtn" class="glow-on-hover" hidden><i class="bi bi-send"></i></button>
                                 <button id="MicBtn" class="glow-on-hover"><i class="bi bi-mic"></i></button>
-                                <button id="ChatBtn" class="glow-on-hover" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"><i class="bi bi-chat-dots"></i></button>
+                                <button id="ChatBtn" class="glow-on-hover" data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"><i
+                                        class="bi bi-chat-dots"></i></button>
                                 <button id="SettingsBtn" class="glow-on-hover"><i class="bi bi-gear"></i></button>
                             </div>
                         </div>
@@ -85,7 +76,8 @@
                     <div class="col-md-12">
                         <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
                             <div class="">
-                                <p class="text-start text-light mb-4 siri-message" style="font-size:28px">Hello I'M J.A.R.V.I.S</p>
+                                <p class="text-start text-light mb-4 siri-message" style="font-size:28px">Hello I'M
+                                    J.A.R.V.I.S</p>
                                 <div id="siri-container"></div>
                             </div>
 
@@ -95,7 +87,7 @@
             </div>
 
         </section>
-
+        
     </div>
     <div class="offcanvas offcanvas-start chat-canvas" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
         id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
